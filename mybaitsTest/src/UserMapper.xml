@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 当前文件路径 -->
+<mapper namespace="com.sys.dao.UserDao">
+	<insert id="addUser" parameterType="User">
+	insert into USER(username,password,usex,nickname)
+	values(#{username},#{password},#{usex},#{nickname});
+	</insert>
+	<delete id="delUser" parameterType="java.lang.String">
+	delete from USER where username = #{username};
+	</delete>
+	<update id="updateUser" parameterType="User">
+	update USER set nickname =#{newnick} where username=#{newname};
+	</update>
+	<select id="getAll" resultType="User">
+	select * from USER;
+	</select>
+	<select id="getAllWithCardid" resultMap="userAndMessage">
+	select * from user,message where user.uid= message.uid;
+	</select>
+	<resultMap type="User" id="userAndMessage">
+	<id property="uid" column="uid"/>
+	<result property="username" column="username"/>
+	<result property="password" column="password"/>
+	<result property="usex" column="usex"/>
+	<result property="nickname" column="nickname"/>
+	<association property="message" javaType="Message">
+			<id property="mid" column="mid"></id>
+			<result property="uid" column="uid"/>
+			<result property="idcard" column="idcard"/>
+	</association>
+	</resultMap>
+	<select id="getAllWithPhone" resultMap="userAndPhone"> 
+	select user.*,phone.* from user,phone where user.uid=phone.uid
+	</select>
+	<resultMap type="User" id="userAndPhone">
+	<id property="uid" column="uid"/>
+	<result property="username" column="username"/>
+	<result property="password" column="password"/>
+	<result property="usex" column="usex"/>
+	<result property="nickname" column="nickname"/>
+	<collection property="list" ofType="Phone" column="uid">
+		<id property="pid" column="pid"/>
+		<result property="uid" column="uid"/>
+		<result property="tel" column="tel"/>
+	</collection>
+	</resultMap>
+</mapper>
